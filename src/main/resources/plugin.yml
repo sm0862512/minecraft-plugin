@@ -1,0 +1,9 @@
+name: hello
+version: '${project.version}'
+main: com.jack.hello.Hello
+api-version: '1.20'
+commands:
+  Heal:
+    description: heals player
+  sethome:
+    description: sets player home
