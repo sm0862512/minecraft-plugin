@@ -30,10 +30,10 @@ public class sethome implements CommandExecutor {
                 }
                 File locationFile = new File(dataFolder, player.getName() + ".txt");
                 FileWriter writer = new FileWriter(locationFile);
-                writer.write("World: " + loc.getWorld().getName() + "\n");
-                writer.write("X: " + loc.getX() + "\n");
-                writer.write("Y: " + loc.getY() + "\n");
-                writer.write("Z: " + loc.getZ() + "\n");
+                writer.write(" World: " + loc.getWorld().getName() + "\n");
+                writer.write(" X: " + loc.getX() + "\n");
+                writer.write(" Y: " + loc.getY() + "\n");
+                writer.write(" Z: " + loc.getZ() + "\n");
                 writer.close();
             } catch (IOException e) {
                 e.printStackTrace();
