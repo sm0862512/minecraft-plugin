@@ -19,17 +19,11 @@ public final class Hello extends JavaPlugin implements Listener {
         Bukkit.getPluginManager().registerEvents(this,this);
         getCommand("heal").setExecutor(new HealCommand());
         getCommand("sethome").setExecutor(new sethome());
+        getCommand("delhome").setExecutor(new delhome());
 
 
     }
-//    @EventHandler
-//    public void onPlayerMove(PlayerMoveEvent e){
-//        e.setCancelled(false);
-//        e.getPlayer().sendMessage(ChatColor.RED + "stop moving");
-//    }
-    @EventHandler
-    public void onPlayerEgghrow(PlayerEggThrowEvent e){
-     e.getPlayer().sendMessage("EGG NOOOOOOOOOOO");}
+
 
 
 
