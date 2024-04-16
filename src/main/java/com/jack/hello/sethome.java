@@ -1,14 +1,23 @@
 package com.jack.hello;
 
+import com.google.gson.Gson;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class sethome implements CommandExecutor {
 
+    private final Hello plugin;
+
+    public sethome(Hello plugin) {
+        this.plugin = plugin;
+    }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] strings) {
@@ -17,8 +26,7 @@ public class sethome implements CommandExecutor {
         if (sender instanceof Player) {
             String homename = null;
             if (strings.length > 0) {
-                homename = strings[0];
-                // You can continue this for as many arguments as you expect
+                homename = strings[1];
             }
             Player player = (Player) sender;
             String home = String.valueOf(player.getLocation());
@@ -30,7 +38,16 @@ public class sethome implements CommandExecutor {
             String createhome = player + homename + x + y + z;
             homes.add(createhome);
 
+            // Convert the homes list to JSON
+            Gson gson = new Gson();
+            String json = gson.toJson(homes);
 
+            // Write the JSON to a file
+            try (FileWriter file = new FileWriter(plugin.getDataFolder() + "/homeplugin/data.json")) { // Use plugin.getDataFolder()
+                file.write(json);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         return false;
     }
