@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class sethome implements CommandExecutor {
 
@@ -22,33 +23,38 @@ public class sethome implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] strings) {
 
+
         ArrayList<String> homes = new ArrayList<String>();
+        String homename = null;
         if (sender instanceof Player) {
-            String homename = null;
+            homename = null;
             if (strings.length > 0) {
-                homename = strings[1];
+                homename = strings[0];
             }
-            Player player = (Player) sender;
-            String home = String.valueOf(player.getLocation());
-            String x = String.valueOf(player.getLocation().getX());
-            String y = String.valueOf(player.getLocation().getY());
-            String z = String.valueOf(player.getLocation().getZ());
-            player.sendMessage(" X: " + x + " Y: " + y + " Z: " + z);
-            Location loc = player.getLocation();
-            String createhome = player + homename + x + y + z;
-            homes.add(createhome);
-
-            // Convert the homes list to JSON
-            Gson gson = new Gson();
-            String json = gson.toJson(homes);
-
-            // Write the JSON to a file
-            try (FileWriter file = new FileWriter(plugin.getDataFolder() + "/homeplugin/data.json")) { // Use plugin.getDataFolder()
-                file.write(json);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            // rest of your code
         }
+        Player player = (Player) sender;
+        UUID playerUUID = player.getUniqueId();
+        String home = String.valueOf(player.getLocation());
+        String x = String.valueOf(player.getLocation().getX());
+        String y = String.valueOf(player.getLocation().getY());
+        String z = String.valueOf(player.getLocation().getZ());
+        player.sendMessage(" X: " + x + " Y: " + y + " Z: " + z);
+        Location loc = player.getLocation();
+        String createhome = playerUUID + "," + homename + "," +  x + "," + y + "," + z;
+        homes.add(createhome);
+
+        // Convert the homes list to JSON
+        Gson gson = new Gson();
+        String json = gson.toJson(homes);
+
+        // Write the JSON to a file
+        try (FileWriter file = new FileWriter(plugin.getDataFolder() + "/data.json")) { // Use plugin.getDataFolder()
+            file.write(json);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         return false;
     }
 }

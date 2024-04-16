@@ -18,11 +18,11 @@ public final class Hello extends JavaPlugin implements Listener {
         getCommand("delhome").setExecutor(new delhome());
 
         // Create a new folder named 'homeplugin' in the plugin's data folder
-        File homePluginFolder = new File(getDataFolder(), "homeplugin");
+        File homePluginFolder = new File(String.valueOf(getDataFolder()));
         homePluginFolder.mkdirs();
 
-        // Create a new data file in the 'homeplugin' folder
-        File dataFile = new File(homePluginFolder, "data.json");
+        // Create a new data file in the plugin's data folder
+        File dataFile = new File(getDataFolder(), "data.json");
         try {
             if (!dataFile.exists()) {
                 dataFile.createNewFile();
