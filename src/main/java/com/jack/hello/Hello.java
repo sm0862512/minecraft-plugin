@@ -16,6 +16,7 @@ public final class Hello extends JavaPlugin implements Listener {
         getCommand("heal").setExecutor(new HealCommand());
         getCommand("sethome").setExecutor(new sethome(this)); // Pass 'this' to sethome
         getCommand("delhome").setExecutor(new delhome());
+        getCommand("home").setExecutor(new home(this)); // Pass 'this' to home
 
         // Create a new folder named 'homeplugin' in the plugin's data folder
         File homePluginFolder = new File(String.valueOf(getDataFolder()));

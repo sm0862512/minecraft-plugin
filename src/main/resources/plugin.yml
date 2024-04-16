@@ -8,3 +8,5 @@ commands:
     description: Set home command
   delhome:
     description: Delete home command
+  home:
+    description: Home command

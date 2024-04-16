@@ -47,8 +47,9 @@ public class sethome implements CommandExecutor {
         String json = gson.toJson(homes);
 
         // Write the JSON to a file
-        try (FileWriter file = new FileWriter(plugin.getDataFolder() + "/data.json")) { // Use plugin.getDataFolder()
-            file.write(json);
+        try (FileWriter file = new FileWriter(plugin.getDataFolder() + "/data.json", true)) { // Use plugin.getDataFolder()
+            String data = gson.toJson(homes);
+            file.write(data + "\n"); // Add newline character
         } catch (IOException e) {
             e.printStackTrace();
         }
