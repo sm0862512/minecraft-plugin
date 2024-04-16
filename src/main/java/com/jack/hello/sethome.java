@@ -35,12 +35,10 @@ public class sethome implements CommandExecutor {
         }
         Player player = (Player) sender;
         UUID playerUUID = player.getUniqueId();
-        String home = String.valueOf(player.getLocation());
         String x = String.valueOf(player.getLocation().getX());
         String y = String.valueOf(player.getLocation().getY());
         String z = String.valueOf(player.getLocation().getZ());
         player.sendMessage(" X: " + x + " Y: " + y + " Z: " + z);
-        Location loc = player.getLocation();
         String createhome = playerUUID + "," + homename + "," +  x + "," + y + "," + z;
         homes.add(createhome);
 
