@@ -1,23 +1,19 @@
 package com.jack.hello;
 
-import com.google.common.reflect.TypeToken;
-import com.google.gson.Gson;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.UUID;
 
 public class sethome implements CommandExecutor {
 
     private final Hello plugin;
-    private ArrayList<String> homes = new ArrayList<>();
 
     public sethome(Hello plugin) {
         this.plugin = plugin;
@@ -37,41 +33,33 @@ public class sethome implements CommandExecutor {
             String y = String.valueOf(player.getLocation().getY());
             String z = String.valueOf(player.getLocation().getZ());
             player.sendMessage(" X: " + x + " Y: " + y + " Z: " + z);
-            String createhome = playerUUID + "," + homeName + "," + x + "," + y + "," + z;
 
-            // Load existing homes from JSON file
-            try (FileReader reader = new FileReader(plugin.getDataFolder() + "/data.json")) {
-                Gson gson = new Gson();
-                Type type = new TypeToken<ArrayList<String>>() {}.getType();
-                homes = gson.fromJson(reader, type);
-                if (homes == null) {
-                    homes = new ArrayList<>();
+            // Connect to SQLite database
+            try (Connection conn = DriverManager.getConnection("jdbc:sqlite:" + plugin.getDataFolder() + "/homes.db")) {
+                // Create table if not exists
+                String sql = "CREATE TABLE IF NOT EXISTS homes ("
+                        + "uuid text NOT NULL,"
+                        + "homeName text NOT NULL,"
+                        + "x real NOT NULL,"
+                        + "y real NOT NULL,"
+                        + "z real NOT NULL,"
+                        + "PRIMARY KEY (uuid, homeName)"
+                        + ");";
+                try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                    pstmt.executeUpdate();
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
 
-            // Check if a home with the same name already exists for the player
-            for (int i = 0; i < homes.size(); i++) {
-                String[] parts = homes.get(i).split(",");
-                if (parts.length >= 5 && parts[0].equals(playerUUID.toString()) && parts[1].equals(homeName)) {
-                    // Remove the old home
-                    homes.remove(i);
-                    break;
+                // Insert or update home
+                sql = "INSERT OR REPLACE INTO homes (uuid, homeName, x, y, z) VALUES(?, ?, ?, ?, ?)";
+                try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                    pstmt.setString(1, playerUUID.toString());
+                    pstmt.setString(2, homeName);
+                    pstmt.setDouble(3, Double.parseDouble(x));
+                    pstmt.setDouble(4, Double.parseDouble(y));
+                    pstmt.setDouble(5, Double.parseDouble(z));
+                    pstmt.executeUpdate();
                 }
-            }
-
-            // Add new home
-            homes.add(createhome);
-
-            // Convert the homes list to JSON
-            Gson gson = new Gson();
-
-            // Write the JSON to a file
-            try (FileWriter file = new FileWriter(plugin.getDataFolder() + "/data.json")) { // Overwrite the file
-                String data = gson.toJson(homes);
-                file.write(data + "\n"); // No newline character
-            } catch (IOException e) {
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
 
