@@ -3,8 +3,11 @@ package com.jack.hello;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
-import java.io.File;
-import java.io.IOException;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 public final class Hello extends JavaPlugin implements Listener {
 
@@ -18,17 +21,21 @@ public final class Hello extends JavaPlugin implements Listener {
         getCommand("delhome").setExecutor(new delhome());
         getCommand("home").setExecutor(new home(this)); // Pass 'this' to home
 
-        // Create a new folder named 'homeplugin' in the plugin's data folder
-        File homePluginFolder = new File(String.valueOf(getDataFolder()));
-        homePluginFolder.mkdirs();
-
-        // Create a new data file in the plugin's data folder
-        File dataFile = new File(getDataFolder(), "data.json");
-        try {
-            if (!dataFile.exists()) {
-                dataFile.createNewFile();
+        // Connect to SQLite database
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:" + getDataFolder() + "/homes.db")) {
+            // Create table if not exists
+            String sql = "CREATE TABLE IF NOT EXISTS homes ("
+                    + "uuid text NOT NULL,"
+                    + "homeName text NOT NULL,"
+                    + "x real NOT NULL,"
+                    + "y real NOT NULL,"
+                    + "z real NOT NULL,"
+                    + "PRIMARY KEY (uuid, homeName)"
+                    + ");";
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.executeUpdate();
             }
-        } catch (IOException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
