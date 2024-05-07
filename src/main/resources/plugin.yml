@@ -3,10 +3,12 @@ main: com.jack.hello.Hello
 version: 1.0
 commands:
   heal:
-    description: Heal command
+    description: Heals a player
   sethome:
-    description: Set home command
+    description: Sets a player's home
   delhome:
-    description: Delete home command
+    description: Deletes a player's home
   home:
-    description: Home command
+    description: Teleports a player to their home
+  listhomes:
+    description: Lists all homes of a player
