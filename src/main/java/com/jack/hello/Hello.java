@@ -16,10 +16,11 @@ public final class Hello extends JavaPlugin implements Listener {
         // Plugin startup logic
         System.out.println("enabled");
         Bukkit.getPluginManager().registerEvents(this,this);
-        getCommand("heal").setExecutor(new HealCommand());
+        getCommand("heal").setExecutor(new HealCommand());// Pass 'this' to HealCommand
         getCommand("sethome").setExecutor(new sethome(this)); // Pass 'this' to sethome
-        getCommand("delhome").setExecutor(new delhome());
+        getCommand("delhome").setExecutor(new delhome(this));// Pass 'this' to delhome
         getCommand("home").setExecutor(new home(this)); // Pass 'this' to home
+        getCommand("listhomes").setExecutor(new listhomes(this)); // Pass 'this' to listhomes
 
         // Connect to SQLite database
         try (Connection conn = DriverManager.getConnection("jdbc:sqlite:" + getDataFolder() + "/homes.db")) {
